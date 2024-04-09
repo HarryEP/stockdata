@@ -1,3 +1,5 @@
+'''gets stock data from yahoo finance'''
+
 from datetime import date
 import yfinance as yf
 import numpy as np
