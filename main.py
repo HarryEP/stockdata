@@ -14,10 +14,30 @@ def load_data(stock: str, start: date, end: date) -> pd.DataFrame:
     return data
 
 
+def choose_stock():
+    pass
+
+
+def get_start_date() -> date:
+    poss_date = st.sidebar.date_input('start date:')
+    if poss_date >= TODAY:
+        return TODAY
+    return poss_date
+
+
+def get_end_date(start: date) -> date:
+    poss_date = st.sidebar.date_input('start date:')
+    if poss_date <= start:
+        return start
+    if poss_date > TODAY:
+        return TODAY
+    return poss_date
+
+
 def main():
     '''function to run everything'''
-    start_date = st.sidebar.date_input('start')
-    end_date = st.sidebar.date_input('end')
+    start_date = get_start_date()
+    end_date = get_end_date(start_date)
     st.write(load_data('KO', start_date, end_date).tail())
 
 
