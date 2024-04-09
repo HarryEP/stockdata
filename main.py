@@ -15,10 +15,12 @@ def load_data(stock: str, start: date, end: date) -> pd.DataFrame:
 
 
 def choose_stock():
+    '''function to select a certain stock'''
     pass
 
 
 def get_start_date() -> date:
+    '''function to get and validate a start date'''
     poss_date = st.sidebar.date_input('start date:')
     if poss_date >= TODAY:
         return TODAY
@@ -26,6 +28,7 @@ def get_start_date() -> date:
 
 
 def get_end_date(start: date) -> date:
+    '''function to get and validate a start date'''
     poss_date = st.sidebar.date_input('start date:')
     if poss_date <= start:
         return start
