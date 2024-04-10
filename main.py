@@ -43,7 +43,7 @@ def main():
     '''function to run everything'''
     start_date = get_start_date()
     end_date = get_end_date(start_date)
-    st.write(retrieve_data(choose_stock(), start_date, end_date).tail())
+    st.write(retrieve_data(choose_stock(), start_date, end_date))
 
 
 if __name__ == "__main__":
