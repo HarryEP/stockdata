@@ -2,15 +2,14 @@
 
 import datetime
 import yfinance as yf
-import numpy as np
 import streamlit as st
 import pandas as pd
 
 TODAY = datetime.date.today()
 
 
-def load_data(stock: str, start: datetime.date, end: datetime.date) -> pd.DataFrame:
-    '''load the data to a dataframe to use within the code'''
+def retrieve_data(stock: str, start: datetime.date, end: datetime.date) -> pd.DataFrame:
+    '''retrieve the data for the stock code'''
     data = yf.download(stock, start, end)
     data.reset_index(inplace=True)
     return data
@@ -44,7 +43,7 @@ def main():
     '''function to run everything'''
     start_date = get_start_date()
     end_date = get_end_date(start_date)
-    st.write(load_data(choose_stock(), start_date, end_date).tail())
+    st.write(retrieve_data(choose_stock(), start_date, end_date).tail())
 
 
 if __name__ == "__main__":
