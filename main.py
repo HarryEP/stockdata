@@ -18,14 +18,13 @@ def load_data(stock: str, start: datetime.date, end: datetime.date) -> pd.DataFr
 
 def choose_stock() -> str:
     '''function to select a certain stock'''
-    return 'KO'
+    stock = st.sidebar.text_input('what stock code do you want to check?: ')
+    return stock
 
 
 def get_start_date() -> datetime.date:
     '''function to get and validate a start date'''
     poss_date = st.sidebar.date_input('start date:', key='start')
-    print(type(poss_date))
-    print(type(TODAY))
     if poss_date > TODAY:
         return TODAY
     return poss_date
