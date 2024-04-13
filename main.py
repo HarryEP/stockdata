@@ -18,6 +18,8 @@ def retrieve_data(stock: str, start: datetime.date, end: datetime.date) -> pd.Da
 def choose_stock() -> str:
     '''function to select a certain stock'''
     stock = st.sidebar.text_input('what stock code do you want to check?: ')
+    if stock == '' or stock == None:
+        return 'KO'
     return stock
 
 
@@ -41,9 +43,13 @@ def get_end_date(start: datetime.date) -> datetime.date:
 
 def main():
     '''function to run everything'''
-    start_date = get_start_date()
-    end_date = get_end_date(start_date)
-    st.write(retrieve_data(choose_stock(), start_date, end_date))
+    # start_date = get_start_date()
+    # end_date = get_end_date(start_date)
+    start_date = "2024-01-01"
+    end_date = "2024-04-04"
+    data = retrieve_data(choose_stock(), start_date, end_date)
+    st.write(data)
+    print(data)
 
 
 if __name__ == "__main__":
