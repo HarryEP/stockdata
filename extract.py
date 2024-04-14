@@ -61,14 +61,17 @@ def extract() -> list:
 
 def clean(data):
     '''cleans the data ready to load it'''
-    data = 5
+    data['Date'] = pd.to_datetime(['Date'])
+    data.rename(columns={'Close': 'Closing_Price'}, inplace=True)
+    data.rename(columns={'Open': 'Opening_Price'}, inplace=True)
+    return data
 
 
 def main():
 
     data = extract()
-    # cleaned_data = clean(data)
-    # print(cleaned_data)
+    cleaned_data = clean(data)
+    print(cleaned_data)
 
 
 if __name__ == "__main__":
