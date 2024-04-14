@@ -25,19 +25,29 @@ def choose_stock() -> str:
 def get_start_date() -> datetime.date:
     '''function to get and validate a start date'''
     poss_date = input('start date in "YYYY-MM-DD" please: ')
-    if poss_date > TODAY:
-        return TODAY
-    return poss_date
+    try:
+        start_date = datetime.datetime.strptime(poss_date, '%Y-%m-%d').date()
+        if start_date > TODAY:
+            return TODAY
+        return start_date
+    except:
+        print("invalid input - try again")
+        get_start_date()
 
 
 def get_end_date(start: datetime.date) -> datetime.date:
     '''function to get and validate a start date'''
     poss_date = input('end date in "YYYY-MM-DD" please: ')
-    if poss_date < start:
-        return start
-    if poss_date > TODAY:
-        return TODAY
-    return poss_date
+    try:
+        end_date = datetime.datetime.strptime(poss_date, '%Y-%m-%d').date()
+        if end_date < start:
+            return start
+        if end_date > TODAY:
+            return TODAY
+        return end_date
+    except:
+        print("invalid input - try again")
+        get_end_date()
 
 
 def extract() -> list:
@@ -45,17 +55,20 @@ def extract() -> list:
     start_date = get_start_date()
     end_date = get_end_date(start_date)
     data = retrieve_data(choose_stock(), start_date, end_date)
+    print(data)
     return data
 
 
 def clean(data):
     '''cleans the data ready to load it'''
+    data = 5
 
 
-if __name__ == "__main__":
+def main():
 
     data = extract()
-    data = clean(data)
+    # cleaned_data = clean(data)
+    # print(cleaned_data)
 
 
 if __name__ == "__main__":
