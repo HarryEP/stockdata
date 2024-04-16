@@ -24,6 +24,6 @@ CREATE TABLE IF NOT EXISTS prices (
     close_price REAL,
     adj_close_price REAL,
     volume INT,
-    PRIMARY KEY (price_id)
+    PRIMARY KEY (price_id),
     FOREIGN KEY (company_id) REFERENCES company(company_id)
 );
