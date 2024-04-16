@@ -1,9 +1,13 @@
 '''gets stock data from yahoo finance'''
 
+import os
 import datetime
 import yfinance as yf
 import pandas as pd
 from dotenv import load_dotenv
+import psycopg2
+from psycopg2.extras import RealDictCursor, execute_values
+from psycopg2.extensions import connection
 
 TODAY = datetime.date.today()
 
@@ -68,9 +72,18 @@ def clean(data):
     return data
 
 
-def get_connection(host: str, db_name: str, user: str):
-    '''Connects to the database'''
-    pass
+def get_connection(host: str, db_name: str, password: str, user: str) -> connection:
+    """Connects to the database"""
+
+    try:
+        conn = psycopg2.connect(host=host,
+                                dbname=db_name,
+                                password=password,
+                                user=user,
+                                cursor_factory=RealDictCursor)
+        return conn
+    except Exception as e:
+        print(f"Error {e} occured!")
 
 
 def load():
@@ -83,6 +96,9 @@ def main():
     data = extract()
     cleaned_data = clean(data)
     print(cleaned_data)
+    load_dotenv()
+    connection = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
+                                os.environ["DB_PASS"], os.environ["DB_USER"])
 
 
 if __name__ == "__main__":

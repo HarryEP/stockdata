@@ -3,6 +3,8 @@ numpy
 pandas
 streamlit
 datetime
+psycopg2
+psycopg2-binary
 pylint
 pytest
 python-dotenv
