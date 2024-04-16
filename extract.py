@@ -59,9 +59,10 @@ def extract() -> list:
     '''function to run everything'''
     start_date = get_start_date()
     end_date = get_end_date(start_date)
-    data = retrieve_data(choose_stock(), start_date, end_date)
+    stock_name = choose_stock()
+    data = retrieve_data(stock_name, start_date, end_date)
     print(data)
-    return data
+    return stock_name, data
 
 
 def clean(data):
@@ -86,19 +87,38 @@ def get_connection(host: str, db_name: str, password: str, user: str) -> connect
         print(f"Error {e} occured!")
 
 
-def load():
+def get_company_name(symbol: str) -> str:
+    '''to get company name using the symbol'''
+    try:
+        ticker = yf.Ticker(symbol)
+        stock_info = ticker.info
+        return stock_info["longName"]
+    except Exception as e:
+        print(f'{e} Error occured')
+        stock_name = input("Enter stock name manually: ")
+        return stock_name
+
+
+def load(new_conn: connection, data, stock_symbol, schema_name):
     '''function to load to psql'''
-    pass
+    company_info = [stock_symbol, get_company_name(stock_symbol)]
+    with new_conn.cursor() as cur:
+        cur.execute("SET search_path TO %s", (schema_name,))
+        cur.execute("""INSERT INTO company (symbol,company_name)
+                    VALUES (%s,%s)""", company_info)
+    new_conn.commit()
 
 
 def main():
 
-    data = extract()
+    ticker, data = extract()
     cleaned_data = clean(data)
     print(cleaned_data)
     load_dotenv()
     connection = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                                 os.environ["DB_PASS"], os.environ["DB_USER"])
+
+    load(connection, cleaned_data, ticker, os.environ["SCHEMA"])
 
 
 if __name__ == "__main__":
