@@ -6,7 +6,8 @@ Run `pip3 install -r "requirements.txt"`
 
 ## how to run
 
-Run `streamlit run main.py`
+Run `\i schema.sql` in your postgres terminal to set up the database.
+Run `python3 extract.py`
 
 Then do control and C in the terminal to close.
 

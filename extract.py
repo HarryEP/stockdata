@@ -3,6 +3,7 @@
 import datetime
 import yfinance as yf
 import pandas as pd
+from dotenv import load_dotenv
 
 TODAY = datetime.date.today()
 
@@ -65,6 +66,16 @@ def clean(data):
     data.rename(columns={'Close': 'Closing_Price'}, inplace=True)
     data.rename(columns={'Open': 'Opening_Price'}, inplace=True)
     return data
+
+
+def get_connection(host: str, db_name: str, user: str):
+    '''Connects to the database'''
+    pass
+
+
+def load():
+    '''function to load to psql'''
+    pass
 
 
 def main():

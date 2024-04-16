@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS company (
     company_name TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS prices(
+CREATE TABLE IF NOT EXISTS prices (
     price_id INT GENERATED ALWAYS AS IDENTITY,
     company_id INT NOT NULL,
     price_date TIMESTAMP NOT NULL,
