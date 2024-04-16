@@ -10,7 +10,8 @@ SET search_path TO pricing;
 CREATE TABLE IF NOT EXISTS company (
     company_id INT GENERATED ALWAYS AS IDENTITY,
     symbol TEXT NOT NULL UNIQUE,
-    company_name TEXT NOT NULL
+    company_name TEXT NOT NULL,
+    PRIMARY KEY (company_id)
 );
 
 CREATE TABLE IF NOT EXISTS prices (
@@ -23,5 +24,6 @@ CREATE TABLE IF NOT EXISTS prices (
     close_price REAL,
     adj_close_price REAL,
     volume INT,
+    PRIMARY KEY (price_id)
     FOREIGN KEY (company_id) REFERENCES company(company_id)
 );
