@@ -99,6 +99,14 @@ def get_company_name(symbol: str) -> str:
         return stock_name
 
 
+def reorder_data(dataframe, symbol_id):
+    '''reorders data to allow symbol_id in'''
+    dataframe['Company_id'] = symbol_id
+    dataframe = dataframe[['Company_id', 'Date', 'Opening_Price',
+                           'High', 'Low', 'Closing_Price', 'Adj Close', 'Volume']]
+    return dataframe
+
+
 def load(new_conn: connection, data, stock_symbol, schema_name):
     '''function to load to psql'''
     company_info = [stock_symbol, get_company_name(stock_symbol)]
@@ -106,6 +114,13 @@ def load(new_conn: connection, data, stock_symbol, schema_name):
         cur.execute("SET search_path TO %s", (schema_name,))
         cur.execute("""INSERT INTO company (symbol,company_name)
                     VALUES (%s,%s) ON CONFLICT DO NOTHING""", company_info)
+        cur.execute(
+            "SELECT company_id FROM company WHERE symbol = %s", (stock_symbol,))
+        command_result = cur.fetchone()
+        symbol_id = command_result['company_id']
+        data = reorder_data(data, symbol_id)
+        print(data)
+        # cur.executemany("""INSERT INTO prices (company_id)")
     new_conn.commit()
 
 
