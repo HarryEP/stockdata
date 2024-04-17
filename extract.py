@@ -105,7 +105,7 @@ def load(new_conn: connection, data, stock_symbol, schema_name):
     with new_conn.cursor() as cur:
         cur.execute("SET search_path TO %s", (schema_name,))
         cur.execute("""INSERT INTO company (symbol,company_name)
-                    VALUES (%s,%s)""", company_info)
+                    VALUES (%s,%s) ON CONFLICT DO NOTHING""", company_info)
     new_conn.commit()
 
 
