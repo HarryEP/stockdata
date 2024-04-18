@@ -22,7 +22,7 @@ def retrieve_data(stock: str, start: datetime.date, end: datetime.date) -> pd.Da
 def choose_stock() -> str:
     '''function to select a certain stock'''
     stock = input('what stock code do you want to check?: ')
-    if stock == '' or stock == None:
+    if stock == '' or stock is None:
         return 'KO'
     return stock
 
@@ -74,8 +74,7 @@ def clean(data):
 
 
 def get_connection(host: str, db_name: str, password: str, user: str) -> connection:
-    """Connects to the database"""
-
+    '''Connects to the database'''
     try:
         conn = psycopg2.connect(host=host,
                                 dbname=db_name,
