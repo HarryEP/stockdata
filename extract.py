@@ -120,7 +120,11 @@ def load(new_conn: connection, data, stock_symbol, schema_name):
         symbol_id = command_result['company_id']
         data = reorder_data(data, symbol_id)
         print(data)
-        # cur.executemany("""INSERT INTO prices (company_id)")
+        data_tuples = [tuple(row) for row in data.values]
+        cur.executemany("""INSERT INTO prices (company_id, price_date, open_price,high,
+                        low, close_price, adj_close_price, volume) VALUES
+                        (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING""",
+                        data_tuples)
     new_conn.commit()
 
 
