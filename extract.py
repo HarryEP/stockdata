@@ -6,7 +6,7 @@ import yfinance as yf
 import pandas as pd
 from dotenv import load_dotenv
 import psycopg2
-from psycopg2.extras import RealDictCursor, execute_values
+from psycopg2.extras import RealDictCursor
 from psycopg2.extensions import connection
 
 TODAY = datetime.date.today()
@@ -128,7 +128,7 @@ def load(new_conn: connection, data, stock_symbol, schema_name):
 
 
 def main():
-
+    '''the function to run everything in'''
     ticker, data = extract()
     cleaned_data = clean(data)
     print(cleaned_data)
