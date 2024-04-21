@@ -12,10 +12,13 @@ def choose_companies(conn: connection):
     with conn.cursor() as cur:
         cur.execute("SET search_path TO pricing")
         cur.execute("SELECT company_id, symbol FROM company")
-        data = cur.fetchall()
+        companies = cur.fetchall()
         # [RealDictRow([('company_id', 1), ('symbol', 'KO')]), RealDictRow([('company_id', 2), ('symbol', 'AAPL')]), RealDictRow([('company_id', 3), ('symbol', 'MSFT')])]
-    print(data)
-    # st.sidebar.multiselect()
+        symbols = []
+        for company in companies:
+            symbols.append(company['symbol'])
+        print(symbols)
+    st.sidebar.multiselect('Select companies: ', symbols)
 
 
 def main():
