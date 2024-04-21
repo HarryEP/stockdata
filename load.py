@@ -37,7 +37,6 @@ def load(new_conn: connection, data, stock_symbol, schema_name):
         command_result = cur.fetchone()
         symbol_id = command_result['company_id']
         data = reorder_data(data, symbol_id)
-        print(data)
         data_tuples = [tuple(row) for row in data.values]
         cur.executemany("""INSERT INTO prices (company_id, price_date, open_price,high,
                         low, close_price, adj_close_price, volume) VALUES
