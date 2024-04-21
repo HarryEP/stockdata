@@ -15,8 +15,9 @@ def get_connection(host: str, db_name: str, password: str, user: str) -> connect
                                 user=user,
                                 cursor_factory=RealDictCursor)
         return conn
-    except Exception as e:
+    except psycopg2.Error as e:
         print(f"Error {e} occured!")
+        return None
 
 
 def reorder_data(dataframe, symbol_id):
