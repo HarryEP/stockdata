@@ -1,4 +1,4 @@
-'''module to run everything at once.'''
+'''module to run everything at once in order to fill the database and extract the data'''
 
 import os
 from dotenv import load_dotenv
