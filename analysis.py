@@ -2,6 +2,7 @@
 
 import os
 from dotenv import load_dotenv
+import pandas as pd
 import streamlit as st
 import psycopg2
 from psycopg2.extensions import connection
@@ -19,7 +20,7 @@ def choose_companies(conn: connection, schema_name: str) -> list[str]:
     return selected_companies
 
 
-def retrieve_data(conn: connection):
+def retrieve_data(conn: connection, selected_companies):
     '''function to use SQL to get all the required data'''
     with conn.cursor() as cur:
         cur.execute('''SELECT c.symbol, p.price_date, p.open_price, p.high, p.low,
@@ -28,7 +29,13 @@ def retrieve_data(conn: connection):
                     JOIN company c ON p.company_id=c.company_id
                     ''')
         data = cur.fetchall()
-        print(data)
+        # print(data)
+        df = pd.DataFrame(data, columns=['symbol', 'price_date', 'open_price', 'high',
+                                         'low', 'close_price', 'adj_close_price', 'volume'])
+        new_df = df[df['symbol'].isin(selected_companies)]
+        print(df)
+        st.write(df)
+        st.write(new_df)
 
 
 def main():
@@ -37,7 +44,7 @@ def main():
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
     companies = choose_companies(new_conn, os.environ["SCHEMA"])
-    st.write(retrieve_data(new_conn))
+    st.write(retrieve_data(new_conn, companies))
 
 
 if __name__ == "__main__":
