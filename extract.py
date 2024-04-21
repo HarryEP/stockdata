@@ -47,7 +47,7 @@ def get_end_date(start: datetime.date) -> datetime.date:
         return end_date
     except:
         print("invalid input - try again")
-        get_end_date()
+        get_end_date(start)
 
 
 def extract() -> list:
