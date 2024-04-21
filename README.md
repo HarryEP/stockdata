@@ -7,8 +7,10 @@ Run `pip3 install -r "requirements.txt"`
 ## how to run
 
 Run `\i schema.sql` in your postgres terminal to set up the database.
-Run `python3 fill_database.py`to add the stock of your choice between 2 certain dates.
 
+Run `python3 fill_database.py`to add the stock of your choice between 2 certain dates to the database
+
+To run the analysis, run `streamlit run analysis.py`
 Then do control and C in the terminal to close.
 
 ### future updates
@@ -16,3 +18,4 @@ Then do control and C in the terminal to close.
 adding all information to a database to extra from
 extracting and analysing said data when required.
 have a stock database and a price database, with intentions to split up later by sector and dividends.
+future prediction models
