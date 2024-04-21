@@ -27,3 +27,12 @@ CREATE TABLE IF NOT EXISTS prices (
     PRIMARY KEY (price_id),
     FOREIGN KEY (company_id) REFERENCES company(company_id)
 );
+
+CREATE TABLE IF NOT EXISTS dividends (
+    dividend_id INT GENERATED ALWAYS AS IDENTITY,
+    company_id INT NOT NULL,
+    dividend_date TIMESTAMP NOT NULL,
+    dividend_price REAL,
+    PRIMARY KEY (dividend_id),
+    FOREIGN KEY (company_id) REFERENCES company(company_id)
+);
