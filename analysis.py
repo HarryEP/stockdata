@@ -8,9 +8,9 @@ from psycopg2.extensions import connection
 from load import get_connection
 
 
-def choose_companies(conn: connection):
+def choose_companies(conn: connection, schema_name):
     with conn.cursor() as cur:
-        cur.execute("SET search_path TO pricing")
+        cur.execute("SET search_path TO %s", (schema_name,))
         cur.execute("SELECT company_id, symbol FROM company")
         companies = cur.fetchall()
         # [RealDictRow([('company_id', 1), ('symbol', 'KO')]), RealDictRow([('company_id', 2), ('symbol', 'AAPL')]), RealDictRow([('company_id', 3), ('symbol', 'MSFT')])]
@@ -26,7 +26,7 @@ def main():
     load_dotenv()
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
-    choose_companies(new_conn)
+    choose_companies(new_conn, os.environ["SCHEMA"])
 
 
 if __name__ == "__main__":
