@@ -7,6 +7,7 @@ import streamlit as st
 import psycopg2
 from psycopg2.extensions import connection
 from load import get_connection
+from extract import get_end_date, get_start_date
 
 
 def choose_companies(conn: connection, schema_name: str) -> list[str]:
@@ -44,6 +45,8 @@ def main():
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
     companies = choose_companies(new_conn, os.environ["SCHEMA"])
+    start = get_start_date()
+    end = get_end_date(start)
     st.write(retrieve_data(new_conn, companies))
 
 
