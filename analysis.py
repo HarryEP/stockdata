@@ -4,10 +4,11 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 import psycopg2
 from psycopg2.extensions import connection
 from load import get_connection
-from extract import get_end_date, get_start_date
+# from extract import get_end_date, get_start_date
 
 
 def choose_companies(conn: connection, schema_name: str) -> list[str]:
@@ -21,7 +22,7 @@ def choose_companies(conn: connection, schema_name: str) -> list[str]:
     return selected_companies
 
 
-def retrieve_data(conn: connection, selected_companies):
+def retrieve_data(conn: connection, selected_companies) -> pd.DataFrame:
     '''function to use SQL to get all the required data'''
     with conn.cursor() as cur:
         cur.execute('''SELECT c.symbol, p.price_date, p.open_price, p.high, p.low,
@@ -34,9 +35,7 @@ def retrieve_data(conn: connection, selected_companies):
         df = pd.DataFrame(data, columns=['symbol', 'price_date', 'open_price', 'high',
                                          'low', 'close_price', 'adj_close_price', 'volume'])
         new_df = df[df['symbol'].isin(selected_companies)]
-        print(df)
-        st.write(df)
-        st.write(new_df)
+        return new_df
 
 
 def main():
@@ -45,9 +44,11 @@ def main():
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
     companies = choose_companies(new_conn, os.environ["SCHEMA"])
-    start = get_start_date()
-    end = get_end_date(start)
-    st.write(retrieve_data(new_conn, companies))
+    data = retrieve_data(new_conn, companies)
+    # start = get_start_date()
+    # end = get_end_date(start)
+    plt.plot(data['price_date'], data['close_price'])
+    st.pyplot(plt)
 
 
 if __name__ == "__main__":
