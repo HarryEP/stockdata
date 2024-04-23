@@ -7,7 +7,7 @@ import pandas as pd
 TODAY = datetime.date.today()
 
 
-def retrieve_data(stock: str, start: datetime.date, end: datetime.date) -> pd.DataFrame:
+def retrieve_price_data(stock: str, start: datetime.date, end: datetime.date) -> pd.DataFrame:
     '''retrieve the data for the stock code'''
     data = yf.download(stock, start, end)
     data.reset_index(inplace=True)
@@ -55,7 +55,7 @@ def extract() -> list:
     start_date = get_start_date()
     end_date = get_end_date(start_date)
     stock_name = choose_stock()
-    data = retrieve_data(stock_name, start_date, end_date)
+    data = retrieve_price_data(stock_name, start_date, end_date)
     return stock_name, data
 
 
