@@ -28,15 +28,25 @@ def reorder_data(dataframe, symbol_id):
     return dataframe
 
 
-def load(new_conn: connection, data, stock_symbol, schema_name):
-    '''function to load to psql'''
-    company_info = [stock_symbol, get_company_name(stock_symbol)]
-    with new_conn.cursor() as cur:
-        cur.execute("SET search_path TO %s", (schema_name,))
+def set_schema_path(conn: connection, schema: str):
+    '''function to set schema'''
+    with conn.cursor() as cur:
+        cur.execute("SET search_path TO %s", (schema,))
+    conn.commit()
+
+
+def load_single_company_info(conn: connection, company_details: list[str]):
+    '''add one company info into the company table'''
+    with conn.cursor() as cur:
         cur.execute("""INSERT INTO company (symbol,company_name)
-                    VALUES (%s,%s) ON CONFLICT DO NOTHING""", company_info)
+                    VALUES (%s,%s) ON CONFLICT DO NOTHING""", company_details)
+    conn.commit()
+
+
+def load_data_into_prices(conn: connection, data, symbol: str):
+    with conn.cursor() as cur:
         cur.execute(
-            "SELECT company_id FROM company WHERE symbol = %s", (stock_symbol,))
+            "SELECT company_id FROM company WHERE symbol = %s", (symbol,))
         command_result = cur.fetchone()
         symbol_id = command_result['company_id']
         data = reorder_data(data, symbol_id)
@@ -45,4 +55,12 @@ def load(new_conn: connection, data, stock_symbol, schema_name):
                         low, close_price, adj_close_price, volume) VALUES
                         (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING""",
                         data_tuples)
-    new_conn.commit()
+    conn.commit()
+
+
+def load(new_conn: connection, data, stock_symbol, schema_name):
+    '''function to load to psql'''
+    company_info = [stock_symbol, get_company_name(stock_symbol)]
+    set_schema_path(new_conn, schema_name)
+    load_single_company_info(new_conn, company_info)
+    load_data_into_prices(new_conn, data, stock_symbol)
