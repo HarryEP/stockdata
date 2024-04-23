@@ -44,6 +44,7 @@ def load_single_company_info(conn: connection, company_details: list[str]):
 
 
 def load_data_into_prices(conn: connection, data, symbol: str):
+    '''loads the data into the prices table'''
     with conn.cursor() as cur:
         cur.execute(
             "SELECT company_id FROM company WHERE symbol = %s", (symbol,))

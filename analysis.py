@@ -12,6 +12,7 @@ from load import get_connection
 
 
 def choose_companies(conn: connection, schema_name: str) -> list[str]:
+    '''allows you to select the companies you want to analyse in streamlit'''
     with conn.cursor() as cur:
         cur.execute("SET search_path TO %s", (schema_name,))
         cur.execute("SELECT company_id, symbol FROM company")
@@ -39,7 +40,7 @@ def retrieve_data(conn: connection, selected_companies) -> pd.DataFrame:
 
 
 def main():
-
+    '''function to run everything in one'''
     load_dotenv()
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
