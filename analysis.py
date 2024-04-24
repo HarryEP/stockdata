@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-import psycopg2
+# import psycopg2
 from psycopg2.extensions import connection
 from load import get_connection
 # from extract import get_end_date, get_start_date
@@ -17,7 +17,9 @@ def choose_companies(conn: connection, schema_name: str) -> list[str]:
         cur.execute("SET search_path TO %s", (schema_name,))
         cur.execute("SELECT company_id, symbol FROM company")
         companies = cur.fetchall()
-        # [RealDictRow([('company_id', 1), ('symbol', 'KO')]), RealDictRow([('company_id', 2), ('symbol', 'AAPL')]), RealDictRow([('company_id', 3), ('symbol', 'MSFT')])]
+        # [RealDictRow([('company_id', 1), ('symbol', 'KO')]),
+        #  RealDictRow([('company_id', 2), ('symbol', 'AAPL')]),
+        #  RealDictRow([('company_id', 3), ('symbol', 'MSFT')])]
         symbols = [company['symbol'] for company in companies]
     selected_companies = st.sidebar.multiselect('Select companies: ', symbols)
     return selected_companies
