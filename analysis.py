@@ -17,9 +17,6 @@ def choose_companies(conn: connection, schema_name: str) -> list[str]:
         cur.execute("SET search_path TO %s", (schema_name,))
         cur.execute("SELECT company_id, symbol FROM company")
         companies = cur.fetchall()
-        # [RealDictRow([('company_id', 1), ('symbol', 'KO')]),
-        #  RealDictRow([('company_id', 2), ('symbol', 'AAPL')]),
-        #  RealDictRow([('company_id', 3), ('symbol', 'MSFT')])]
         symbols = [company['symbol'] for company in companies]
     selected_companies = st.sidebar.multiselect('Select companies: ', symbols)
     return selected_companies
@@ -34,11 +31,23 @@ def retrieve_data(conn: connection, selected_companies) -> pd.DataFrame:
                     JOIN company c ON p.company_id=c.company_id
                     ''')
         data = cur.fetchall()
-        # print(data)
         df = pd.DataFrame(data, columns=['symbol', 'price_date', 'open_price', 'high',
                                          'low', 'close_price', 'adj_close_price', 'volume'])
         new_df = df[df['symbol'].isin(selected_companies)]
         return new_df
+
+
+def plot_grouped_line_graph(grouped_data, x_data_desc, y_data_desc,
+                            x_lab, y_lab, graph_title):
+    '''to plot each line graph'''
+    plt.figure(figsize=(10, 6))
+    for symbol, data in grouped_data:
+        plt.plot(data[x_data_desc], data[y_data_desc], label=symbol)
+    plt.xlabel(x_lab)
+    plt.ylabel(y_lab)
+    plt.title(graph_title)
+    plt.legend()
+    st.pyplot(plt)
 
 
 def main():
@@ -51,14 +60,8 @@ def main():
     # start = get_start_date()
     # end = get_end_date(start)
     group_df = df.groupby('symbol')
-    plt.figure(figsize=(10, 6))
-    for symbol, data in group_df:
-        plt.plot(data['price_date'], data['close_price'], label=symbol)
-    plt.xlabel('Price Date')
-    plt.ylabel('Close Price')
-    plt.title('Close Price Over Time')
-    plt.legend()
-    st.pyplot(plt)
+    plot_grouped_line_graph(group_df, 'price_date', 'close_price',
+                            'Price Date', 'Close Price', 'Close Price Over Time')
 
 
 if __name__ == "__main__":
