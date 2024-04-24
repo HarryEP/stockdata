@@ -5,10 +5,8 @@ from dotenv import load_dotenv
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-# import psycopg2
 from psycopg2.extensions import connection
 from load import get_connection
-# from extract import get_end_date, get_start_date
 
 
 def choose_companies(conn: connection, schema_name: str) -> list[str]:
@@ -22,7 +20,7 @@ def choose_companies(conn: connection, schema_name: str) -> list[str]:
     return selected_companies
 
 
-def retrieve_data(conn: connection, selected_companies) -> pd.DataFrame:
+def retrieve_data(conn: connection, selected_companies, start_date, end_date) -> pd.DataFrame:
     '''function to use SQL to get all the required data'''
     with conn.cursor() as cur:
         cur.execute('''SELECT c.symbol, p.price_date, p.open_price, p.high, p.low,
@@ -34,6 +32,8 @@ def retrieve_data(conn: connection, selected_companies) -> pd.DataFrame:
         df = pd.DataFrame(data, columns=['symbol', 'price_date', 'open_price', 'high',
                                          'low', 'close_price', 'adj_close_price', 'volume'])
         new_df = df[df['symbol'].isin(selected_companies)]
+        new_df = new_df[(new_df['price_date'] >= start_date)]
+        new_df = new_df[(new_df['price_date'] <= end_date)]
         return new_df
 
 
@@ -56,9 +56,9 @@ def main():
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
     companies = choose_companies(new_conn, os.environ["SCHEMA"])
-    df = retrieve_data(new_conn, companies)
-    # start = get_start_date()
-    # end = get_end_date(start)
+    start = pd.to_datetime(st.sidebar.date_input('start date: '))
+    end = pd.to_datetime(st.sidebar.date_input('end date: '))
+    df = retrieve_data(new_conn, companies, start, end)
     group_df = df.groupby('symbol')
     plot_grouped_line_graph(group_df, 'price_date', 'close_price',
                             'Price Date', 'Close Price', 'Close Price Over Time')
