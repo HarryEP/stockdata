@@ -45,10 +45,17 @@ def main():
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
     companies = choose_companies(new_conn, os.environ["SCHEMA"])
-    data = retrieve_data(new_conn, companies)
+    df = retrieve_data(new_conn, companies)
     # start = get_start_date()
     # end = get_end_date(start)
-    plt.plot(data['price_date'], data['close_price'])
+    group_df = df.groupby('symbol')
+    plt.figure(figsize=(10, 6))
+    for symbol, data in group_df:
+        plt.plot(data['price_date'], data['close_price'], label=symbol)
+    plt.xlabel('Price Date')
+    plt.ylabel('Close Price')
+    plt.title('Close Price Over Time')
+    plt.legend()
     st.pyplot(plt)
 
 
