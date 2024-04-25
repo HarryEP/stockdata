@@ -52,6 +52,7 @@ def plot_grouped_line_graph(grouped_data, x_data_desc, y_data_desc,
 
 def main():
     '''function to run everything in one'''
+    st.title("Analysis of stock market data for certain companies")
     load_dotenv()
     new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
                               os.environ["DB_PASS"], os.environ["DB_USER"])
@@ -60,8 +61,25 @@ def main():
     end = pd.to_datetime(st.sidebar.date_input('end date: '))
     df = retrieve_data(new_conn, companies, start, end)
     group_df = df.groupby('symbol')
+    # graph 1
+    st.write('This graph is to show the price of the stock(s) over time selected.')
     plot_grouped_line_graph(group_df, 'price_date', 'close_price',
                             'Price Date', 'Close Price', 'Close Price Over Time')
+
+    st.write("""This graph is to show the close price over the average price for
+             the stock over time.""")
+    avg_close = group_df['close_price'].transform('mean')
+
+    plt.figure(figsize=(10, 6))
+    for symbol, data in group_df:
+        close_price_ratio = data['close_price'] / avg_close[data.index]
+        plt.plot(data['price_date'], close_price_ratio, label=symbol)
+
+    plt.xlabel('Price Date')
+    plt.ylabel('Close Price Ratio to Average')
+    plt.title('Close Price Ratio to Average Over Time')
+    plt.legend()
+    st.pyplot(plt)
 
 
 if __name__ == "__main__":
