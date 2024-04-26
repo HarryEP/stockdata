@@ -37,15 +37,15 @@ def retrieve_data(conn: connection, selected_companies, start_date, end_date) ->
         return new_df
 
 
-def plot_grouped_line_graph(grouped_data, x_data_desc, y_data_desc,
-                            x_lab, y_lab, graph_title):
+def plot_grouped_line_graph(parameters: dict):
     '''to plot each line graph'''
     plt.figure(figsize=(10, 6))
-    for symbol, data in grouped_data:
-        plt.plot(data[x_data_desc], data[y_data_desc], label=symbol)
-    plt.xlabel(x_lab)
-    plt.ylabel(y_lab)
-    plt.title(graph_title)
+    for symbol, data in parameters['grouped_data']:
+        plt.plot(data[parameters['x_data_desc']],
+                 data[parameters['y_data_desc']], label=symbol)
+    plt.xlabel(parameters['x_lab'])
+    plt.ylabel(parameters['y_lab'])
+    plt.title(parameters['graph_title'])
     plt.legend()
     st.pyplot(plt)
 
@@ -61,10 +61,16 @@ def main():
     end = pd.to_datetime(st.sidebar.date_input('end date: '))
     df = retrieve_data(new_conn, companies, start, end)
     group_df = df.groupby('symbol')
-    # graph 1
+
     st.write('This graph is to show the price of the stock(s) over time selected.')
-    plot_grouped_line_graph(group_df, 'price_date', 'close_price',
-                            'Price Date', 'Close Price', 'Close Price Over Time')
+    plot_grouped_line_graph({
+        'grouped_data': group_df,
+        'x_data_desc': 'price_date',
+        'y_data_desc': 'close_price',
+        'x_lab': 'Price Date',
+        'y_lab': 'Close Price',
+        'graph_title': 'Close Price Over Time'
+    })
 
     st.write("""This graph is to show the close price over the average price for
              the stock over time.""")
