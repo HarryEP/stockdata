@@ -5,6 +5,7 @@ import yfinance as yf
 import pandas as pd
 
 TODAY = datetime.date.today()
+LAST_YEAR_DATE = TODAY - datetime.timedelta(days=365)
 
 
 def retrieve_price_data(stock: str, start: datetime.date, end: datetime.date) -> pd.DataFrame:
@@ -31,8 +32,9 @@ def get_start_date() -> datetime.date:
             return TODAY
         return start_date
     except:
-        print("invalid input - try again")
-        get_start_date()
+        print(
+            f"invalid input - input is {LAST_YEAR_DATE}")
+        return LAST_YEAR_DATE
 
 
 def get_end_date(start: datetime.date) -> datetime.date:
@@ -46,14 +48,30 @@ def get_end_date(start: datetime.date) -> datetime.date:
             return TODAY
         return end_date
     except:
-        print("invalid input - try again")
-        get_end_date(start)
+        print(f"invalid input - input is {TODAY}")
+        return TODAY
+
+
+def get_date_choice():
+    '''allows the user to choice to add via dates.'''
+    user_input = input("Do you want to manually add dates: (Y/N): ")
+    if user_input == 'Y' or user_input == 'y':
+        return True
+    if user_input == 'N' or user_input == 'n':
+        return False
+    print("invalid input - returning False")
+    return False
 
 
 def extract() -> list:
     '''function to run everything'''
-    start_date = get_start_date()
-    end_date = get_end_date(start_date)
+    manual_date_input = get_date_choice()
+    if manual_date_input:
+        start_date = get_start_date()
+        end_date = get_end_date(start_date)
+    else:
+        start_date = LAST_YEAR_DATE
+        end_date = TODAY
     stock_name = choose_stock()
     data = retrieve_price_data(stock_name, start_date, end_date)
     return stock_name, data
