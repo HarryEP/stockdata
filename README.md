@@ -1,21 +1,49 @@
 # stockdata
 
-## set up
+This project is to fill stock data in a database, analyse it and show the results.
+
+## Set up
+
+##### Requirements
 
 Run `pip3 install -r "requirements.txt"`
 
-## how to run
+##### Database
 
-Run `\i schema.sql` in your postgres terminal to set up the database.
+Load a postgres terminal that is not called 'stockinformation'
+Run `\i schema.sql` in your postgres terminal to set up the database (or to reset the database).
+This can also be done to reset the database.
 
-Run `python3 fill_database.py`to add the stock of your choice between 2 certain dates to the database
+## How to run
+
+##### Add to database
+
+Run `python3 fill_database.py`to add to the database.
+It will ask you for the date range for you to put in. If you don't it will default to [365 days ago - today].
+Then it will ask you for the stock ticker (please make sure this matches the ticker on yahoo finance).
+Repeat for each stock you want in the database as it adds to the database one stock at a time.
+
+##### Running Analysis.
 
 To run the analysis, run `streamlit run analysis.py`
-Then do control and C in the terminal to close.
 
-### future updates
+There is a sidebar as follows: ![Sidebar](https://github.com/HarryEP/stockdata/blob/main/images/sidebar.png)
 
-adding all information to a database to extra from
-extracting and analysing said data when required.
-have a stock database and a price database, with intentions to split up later by sector and dividends.
-future prediction models
+This allows you to select the stocks you want to see and in what time frame:
+Please remember that this is only for the data within the database.
+
+Other outputs will be:
+The close price over time for each stock:
+![Default Price/Time Graph](https://github.com/HarryEP/stockdata/blob/main/images/price_comparison.png)
+
+The Close Price Ratio Graph:
+This is the close price divided by the average price for a stock to see the trend line of said stock.
+![Close Price Ratio Graph](https://github.com/HarryEP/stockdata/blob/main/images/close_price_ratio.png)
+
+### Future updates
+
+Adding information about dividends.
+Adding automatic updates to the database
+More analysis.
+Have a stock database and a price database, with intentions to split up later by sector and dividends.
+Future prediction models.
