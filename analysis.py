@@ -51,7 +51,19 @@ def plot_grouped_line_graph(parameters: dict):
 
 
 def plot_volume_graph(df: pd.DataFrame):
-    '''plots the volume rolling trends for each stock'''
+    '''plots the volume trends for each stock'''
+    plt.figure(figsize=(10, 6))
+    for symbol, data in df:
+        plt.plot(data['price_date'], data['volume'], label=symbol)
+    plt.xlabel('Price Date')
+    plt.ylabel('Rolling Average')
+    plt.title('Rolling Average vs Date')
+    plt.legend()
+    st.pyplot(plt)
+
+
+def plot_volume_rolling_average_graph(df: pd.DataFrame):
+    '''plots the volume rolling average trends for each stock'''
     plt.figure(figsize=(10, 6))
     for symbol, data in df:
         rolling_average = data['volume'].rolling(window=30).mean()
@@ -106,6 +118,11 @@ def main():
     st.write(
         """This graph is to show the rolling average of each stock's volume over time.""")
     plot_volume_graph(group_df)
+
+    # graph 4 - volume rolling average graph
+    st.write(
+        """This graph is to show the rolling average of each stock's volume over time.""")
+    plot_volume_rolling_average_graph(group_df)
 
 
 if __name__ == "__main__":
