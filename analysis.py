@@ -50,6 +50,19 @@ def plot_grouped_line_graph(parameters: dict):
     st.pyplot(plt)
 
 
+def plot_volume_graph(df: pd.DataFrame):
+    '''plots the volume rolling trends for each stock'''
+    plt.figure(figsize=(10, 6))
+    for symbol, data in df:
+        rolling_average = data['volume'].rolling(window=30).mean()
+        plt.plot(data['price_date'], rolling_average, label=symbol)
+    plt.xlabel('Price Date')
+    plt.ylabel('Rolling Average')
+    plt.title('Rolling Average vs Date')
+    plt.legend()
+    st.pyplot(plt)
+
+
 def main():
     '''function to run everything in one'''
     st.title("Analysis of stock market data for certain companies")
@@ -62,6 +75,7 @@ def main():
     df = retrieve_data(new_conn, companies, start, end)
     group_df = df.groupby('symbol')
 
+    # graph 1
     st.write('This graph is to show the price of the stock(s) over time selected.')
     plot_grouped_line_graph({
         'grouped_data': group_df,
@@ -72,6 +86,7 @@ def main():
         'graph_title': 'Close Price Over Time'
     })
 
+    # graph 2
     st.write("""This graph is to show the close price over the average price for
              the stock over time.""")
     avg_close = group_df['close_price'].transform('mean')
@@ -86,6 +101,11 @@ def main():
     plt.title('Close Price Ratio to Average Over Time')
     plt.legend()
     st.pyplot(plt)
+
+    # graph 3 - volume graph
+    st.write(
+        """This graph is to show the rolling average of each stock's volume over time.""")
+    plot_volume_graph(group_df)
 
 
 if __name__ == "__main__":
