@@ -75,17 +75,8 @@ def plot_volume_rolling_average_graph(df: pd.DataFrame):
     st.pyplot(plt)
 
 
-def main():
-    '''function to run everything in one'''
-    st.title("Analysis of stock market data for certain companies")
-    load_dotenv()
-    new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
-                              os.environ["DB_PASS"], os.environ["DB_USER"])
-    companies = choose_companies(new_conn, os.environ["SCHEMA"])
-    start = pd.to_datetime(st.sidebar.date_input('start date: '))
-    end = pd.to_datetime(st.sidebar.date_input('end date: '))
-    df = retrieve_data(new_conn, companies, start, end)
-    group_df = df.groupby('symbol')
+def plot_all(group_df: pd.DataFrame):
+    '''function to plot all functions'''
 
     # graph 1
     st.write('This graph is to show the price of the stock(s) over time selected.')
@@ -123,6 +114,21 @@ def main():
     st.write(
         """This graph is to show the rolling average of each stock's volume over time.""")
     plot_volume_rolling_average_graph(group_df)
+
+
+def main():
+    '''function to run everything in one'''
+    st.title("Analysis of stock market data for certain companies")
+    load_dotenv()
+    new_conn = get_connection(os.environ["DB_HOST"], os.environ["DB_NAME"],
+                              os.environ["DB_PASS"], os.environ["DB_USER"])
+    companies = choose_companies(new_conn, os.environ["SCHEMA"])
+    start = pd.to_datetime(st.sidebar.date_input('start date: '))
+    end = pd.to_datetime(st.sidebar.date_input('end date: '))
+    df = retrieve_data(new_conn, companies, start, end)
+    group_df = df.groupby('symbol')
+
+    plot_all(group_df)
 
 
 if __name__ == "__main__":
