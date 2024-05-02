@@ -56,8 +56,8 @@ def plot_volume_graph(df: pd.DataFrame):
     for symbol, data in df:
         plt.plot(data['price_date'], data['volume'], label=symbol)
     plt.xlabel('Price Date')
-    plt.ylabel('Rolling Average')
-    plt.title('Rolling Average vs Date')
+    plt.ylabel('Volume')
+    plt.title('Volume vs Date')
     plt.legend()
     st.pyplot(plt)
 
