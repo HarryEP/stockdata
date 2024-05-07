@@ -8,6 +8,7 @@ from load import get_connection, load
 
 
 def how_many_inputs() -> int:
+    '''asks the user how many stocks they'd like to add'''
     try:
         answer = int(input("How many stocks would you like to input: "))
     except TypeError as e:
@@ -19,12 +20,14 @@ def how_many_inputs() -> int:
     if answer > 5:
         print("Number is too high! Returning 1 as default")
         return 5
+    return answer
 
 
 def main():
     '''the function to run everything in'''
     number_of_inputs = how_many_inputs()
     for i in range(number_of_inputs):
+        print(f'running stock {i + 1} of {number_of_inputs}')
         ticker, data = extract()
         cleaned_data = clean(data)
         load_dotenv()
