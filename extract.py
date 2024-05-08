@@ -55,9 +55,9 @@ def get_end_date(start: datetime.date) -> datetime.date:
 def get_date_choice():
     '''allows the user to choice to add via dates.'''
     user_input = input("Do you want to manually add dates: (Y/N): ")
-    if user_input == 'Y' or user_input == 'y':
+    if user_input in ('Y', 'y'):
         return True
-    if user_input == 'N' or user_input == 'n':
+    if user_input in ('N', 'n'):
         return False
     print("invalid input - returning False")
     return False
