@@ -3,6 +3,7 @@
 import os
 from dotenv import load_dotenv
 import pandas as pd
+import requests
 import streamlit as st
 import matplotlib.pyplot as plt
 from psycopg2.extensions import connection
