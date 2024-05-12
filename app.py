@@ -10,4 +10,13 @@ def page_not_found(error):
 
 @app.route("/")
 def index():
-    return "Use this program to find out about stock data", 200
+    return render_template('index.html'), 200
+
+
+@app.route("/analysis")
+def show_analysis():
+    return "Analysis shown here", 200
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
