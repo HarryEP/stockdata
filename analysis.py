@@ -126,9 +126,13 @@ def main():
     companies = choose_companies(new_conn, os.environ["SCHEMA"])
     start = pd.to_datetime(st.sidebar.date_input('start date: '))
     end = pd.to_datetime(st.sidebar.date_input('end date: '))
-    df = retrieve_data(new_conn, companies, start, end)
-    group_df = df.groupby('symbol')
+    analysis(start, end, companies, new_conn)
 
+
+def analysis(start, end, companies, conn):
+    '''runs the analysis on command (to pass to different files)'''
+    df = retrieve_data(conn, companies, start, end)
+    group_df = df.groupby('symbol')
     plot_all(group_df)
 
 
