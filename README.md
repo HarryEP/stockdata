@@ -16,6 +16,10 @@ This can also be done to reset the database.
 
 ## How to run
 
+You can either run the application and the streamlit at the same time to get the full effect of the application or you can manually do it all yourself.
+
+### Manually:
+
 #### Add to database:
 
 Run `python3 fill_database.py`to add to the database.\
@@ -41,7 +45,15 @@ The Close Price Ratio Graph:\
 This is the close price divided by the average price for a stock to see the trend line of said stock.\
 ![Close Price Ratio Graph](https://github.com/HarryEP/stockdata/blob/main/images/close_price_ratio.png)
 
-### Future updates
+### Automatically:
+
+To run both automatically, you need to run two commands at the same time in seperate terminals:
+
+Please run `streamlit run analysis.py` and `python3 app.py`
+
+Enjoy!
+
+### Potential updates
 
 Analysing and extracting information about dividends.
 Adding automatic updates to the database
