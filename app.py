@@ -13,10 +13,5 @@ def index():
     return render_template('index.html'), 200
 
 
-@app.route("/analysis")
-def show_analysis():
-    return "Analysis shown here", 200
-
-
 if __name__ == "__main__":
     app.run(debug=True)
